@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from './Header';
-import './App.css';
-import cowsay from 'cowsay-browser';
-import faker from 'faker';
+import '../../App.css';
+import superagent from 'superagent';
+import RedditItem from '../RedditItem/RedditItem';
+
 
 export default class App extends React.Component {
     constructor(props) {// props sorta like html attributes
@@ -17,33 +17,33 @@ export default class App extends React.Component {
     }
 
     loadRedditList = async  () => {
-        const REDDIT_API = 'https://www.reddit.com/r/cats.json?limit=50';
+        const REDDIT_API = 'https://www.reddit.com/r/cats.json?limit=10';
 
         return superagent.get(REDDIT_API)
             .then(response => {
+                console.log(response.body.data.children)
                 this.setState({
-                    reddit: response.body.results
+                    reddit: response.body.data.children
                 });
             })
             .catch(console.error);
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    render() {
+        return(
+            <main>
+            <ul>
+            {
+                this.state.reddit.map((current, index) =>
+                    <RedditItem
+                        reddit = {current}
+                    />
+                )
+            }
+            </ul>
+            </main>
+        )
+    }
 
 
 }
